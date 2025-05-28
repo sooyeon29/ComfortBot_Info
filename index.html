@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Comfort ChatBot</title>
+</head>
+<body>
+    <!-- 사용자 정보 입력 폼 -->
+    <div id="user-info-container" class="user-info-container">
+        <!-- <h1>Comfort ChatBot</h1> -->
+        <h2>Please enter your information.</h2>
+        <form id="user-info-form" class="user-info-form">
+            <label for="name">NAME:</label>
+            <input type="text" id="name" name="name" autocomplete="off" pattern="([가-힣]{2,}|[a-zA-Z]{2,})" required title="Please enter a name with at least 2 characters in Korean or English.">
+
+            <label for="dob">DOB:</label>
+            <input type="date" id="dob" name="dob" min="1974-01-01" max="2006-12-31" value="2000-01-01" required>
+
+            <label for="gender">GENDER:</label>
+            <select id="gender" name="gender" required>
+                <option value="" disabled selected>Please select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="Not to answer">Prefer not to answer</option>
+            </select>
+
+            <button type="submit" id="start-button">START</button>
+        </form>
+    </div>
+
+    <!-- 채팅 인터페이스 -->
+    <div id="chat-container" class="chat-container" style="display: none;">    
+        <!--프사 헤더 추가-->
+    <div id="chat-header" class="chat-header" style="display: none;">
+        <img src="gpt_profile.png" alt="사랑세포" class="profile-pic">
+        <span class="profile-name">RORO</span><br>
+        <span class="user-count-small">
+            <img src="user.png" alt="사용자 아이콘" class="user-icon-small">
+            <span id="user-count-text">2</span>
+        </span>
+    </div>
+
+    <!-- <div id="chat-output" class="chat-output"></div> -->
+        <!--  -->
+    
+        <div id="chat-output" class="chat-output"></div>
+        
+        <form id="text-input-form" class="chat-form">
+            <textarea id="text-input" class="text-input" placeholder="Enter your message here...
+" autocomplete="off"></textarea>
+            <button type="submit" class="chat-submit">Send</button>
+        </form>
+    </div>
+
+    <!-- 마지막 페이지 -->
+    <div id="final-page" class="user-info-container" style="display: none;">
+        <h3>The conversation with the chatbot has ended.</h3>
+        <p>Please proceed with the following post-survey.</p>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
