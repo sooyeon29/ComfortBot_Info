@@ -79,6 +79,8 @@ def save_user_info():
 def chat():
     data = request.json
     user_input = data.get("user_input", "")
+    user_info = data.get("user_info", {})  # ← 새로 추가
+    chat_history = data.get("chat_history", [])  # ← 새로 추가
     chat_history = session.get('chat_history', [])
 
     # 사용자의 첫 메시지 저장
@@ -168,16 +170,29 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
     session['chat_history'] = chat_history
 
     # 실시간 저장
+    # conn = sqlite3.connect('chatbot.db')
+    # c = conn.cursor()
+    # c.execute(
+    #     'UPDATE users SET chat_history = ? WHERE name = ? AND start_time = ?',
+    #     (str(chat_history), session['user_info']['name'], session['start_time']))
+    # conn.commit()
+    # conn.close()
     conn = sqlite3.connect('chatbot.db')
     c = conn.cursor()
+    start_time = data.get("start_time") or datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')
     c.execute(
-        'UPDATE users SET chat_history = ? WHERE name = ? AND start_time = ?',
-        (str(chat_history), session['user_info']['name'],
-         session['start_time']))
-    conn.commit()
-    conn.close()
+        '''INSERT OR REPLACE INTO users (name, dob, gender, start_time, chat_history, status)
+           VALUES (?, ?, ?, ?, ?, ?)''',
+        (user_info.get('name'), user_info.get('dob'), user_info.get('gender'),
+         start_time, str(chat_history), 'incomplete'))
 
-    return jsonify({"reply": bot_reply})
+    # return jsonify({"reply": bot_reply})
+    return jsonify({
+        "reply": bot_reply,
+        "chat_history": chat_history,
+        "start_time": start_time
+    })
+
 
 
 @app.route('/end-chat', methods=['POST'])
