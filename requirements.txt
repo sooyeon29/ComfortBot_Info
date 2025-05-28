@@ -1,5 +1,5 @@
 flask
-openai
+openai==1.14.3
 gunicorn
 python-dotenv
 pytz
