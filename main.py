@@ -177,6 +177,7 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
             }])
         bot_reply = response['choices'][0]['message']['content']
     except Exception as e:
+        print("🔥 GPT 호출 오류:", e)  # 🔥 이걸 반드시 추가!
         bot_reply = "죄송해요, 오류가 발생했습니다."
 
     # 응답 저장 및 반환
