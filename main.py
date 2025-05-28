@@ -79,8 +79,10 @@ def save_user_info():
 def chat():
     data = request.json
     user_input = data.get("user_input", "")
+
     user_info = data.get("user_info", {})  # ← 새로 추가
     chat_history = data.get("chat_history", [])  # ← 새로 추가
+
     chat_history = session.get('chat_history', [])
 
     # 사용자의 첫 메시지 저장
@@ -170,6 +172,7 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
     session['chat_history'] = chat_history
 
     # 실시간 저장
+
     # conn = sqlite3.connect('chatbot.db')
     # c = conn.cursor()
     # c.execute(
@@ -192,6 +195,10 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
         "chat_history": chat_history,
         "start_time": start_time
     })
+
+
+
+    # return jsonify({"reply": bot_reply})
 
 
 
@@ -312,3 +319,4 @@ def view_data():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
