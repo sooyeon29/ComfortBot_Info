@@ -54,7 +54,7 @@ def save_user_info():
     # session['chat_history'] = []
 
     # 챗봇 첫 메시지
-    first_bot_message = f"Hi {user_info['name']}!"
+    # first_bot_message = f"Hi {user_info['name']}!"
     # session['chat_history'].append({"user": None, "bot": first_bot_message})
 
     # 사용자 정보를 DB에 삽입
@@ -71,6 +71,18 @@ def save_user_info():
     #          session['start_time'], '[]', 'incomplete'))
     # conn.commit()
     # conn.close()
+    start_time = datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')
+
+    conn = sqlite3.connect('chatbot.db')
+    c = conn.cursor()
+    c.execute(
+        '''INSERT INTO users (name, dob, gender, start_time, chat_history, status)
+           VALUES (?, ?, ?, ?, ?, ?)''',
+        (user_info['name'], user_info['dob'], user_info['gender'],
+         start_time, '[]', 'incomplete'))
+    conn.commit()
+    conn.close()
+
 
     return jsonify({"message": "사용자 정보가 성공적으로 저장되었습니다."})
 
@@ -188,6 +200,8 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
            VALUES (?, ?, ?, ?, ?, ?)''',
         (user_info.get('name'), user_info.get('dob'), user_info.get('gender'),
          start_time, str(chat_history), 'incomplete'))
+    conn.commit()
+    conn.close()
 
     # return jsonify({"reply": bot_reply})
     return jsonify({
@@ -204,6 +218,10 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
 
 @app.route('/end-chat', methods=['POST'])
 def end_chat():
+    data = request.json
+    user_info = data.get('user_info', {})
+    start_time = data.get('start_time')
+    chat_history = data.get('chat_history', [])
     # user_info = session.get('user_info', {})
     # start_time = session.get('start_time')
     end_time = datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')
@@ -240,6 +258,9 @@ def end_chat():
 def complete_session():
     # user_info = session.get('user_info', {})
     # start_time = session.get('start_time')
+    data = request.json
+    user_info = data.get('user_info', {})
+    start_time = data.get('start_time')
 
     if not user_info or not start_time:
         return jsonify({"error": "세션 정보가 없습니다."}), 400
