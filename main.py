@@ -42,35 +42,35 @@ def index():
 
 @app.route('/reset-session', methods=['POST'])
 def reset_session():
-    session.clear()
+    # session.clear()
     return jsonify({"message": "새로운 사용자가 인식되었습니다."})
 
 
 @app.route('/user-info', methods=['POST'])
 def save_user_info():
     user_info = request.json
-    session['user_info'] = user_info
-    session['start_time'] = datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')
-    session['chat_history'] = []
+    # session['user_info'] = user_info
+    # session['start_time'] = datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')
+    # session['chat_history'] = []
 
     # 챗봇 첫 메시지
     first_bot_message = f"Hi {user_info['name']}!"
-    session['chat_history'].append({"user": None, "bot": first_bot_message})
+    # session['chat_history'].append({"user": None, "bot": first_bot_message})
 
     # 사용자 정보를 DB에 삽입
     conn = sqlite3.connect('chatbot.db')
     c = conn.cursor()
     # 중복 여부 확인
-    c.execute("SELECT COUNT(*) FROM users WHERE name = ? AND start_time = ?",
-              (user_info['name'], session['start_time']))
-    if c.fetchone()[0] == 0:
-        c.execute(
-            '''INSERT INTO users (name, dob, gender, start_time, chat_history, status)
-                     VALUES (?, ?, ?, ?, ?, ?)''',
-            (user_info['name'], user_info['dob'], user_info['gender'],
-             session['start_time'], '[]', 'incomplete'))
-    conn.commit()
-    conn.close()
+    # c.execute("SELECT COUNT(*) FROM users WHERE name = ? AND start_time = ?",
+    #           (user_info['name'], session['start_time']))
+    # if c.fetchone()[0] == 0:
+    #     c.execute(
+    #         '''INSERT INTO users (name, dob, gender, start_time, chat_history, status)
+    #                  VALUES (?, ?, ?, ?, ?, ?)''',
+    #         (user_info['name'], user_info['dob'], user_info['gender'],
+    #          session['start_time'], '[]', 'incomplete'))
+    # conn.commit()
+    # conn.close()
 
     return jsonify({"message": "사용자 정보가 성공적으로 저장되었습니다."})
 
@@ -204,10 +204,10 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
 
 @app.route('/end-chat', methods=['POST'])
 def end_chat():
-    user_info = session.get('user_info', {})
-    start_time = session.get('start_time')
+    # user_info = session.get('user_info', {})
+    # start_time = session.get('start_time')
     end_time = datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')
-    chat_history = session.get('chat_history', [])
+    # chat_history = session.get('chat_history', [])
 
     # 진행 시간 계산 (분 단위)
     start_dt = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
@@ -229,7 +229,7 @@ def end_chat():
     conn.commit()
     conn.close()
 
-    session.clear()
+    # session.clear()
 
     # 중간 종료 시와 정상 종료 시 다른 메시지 반환
     message = "Bye~! Let's talk again next time!!" if status == 'complete' else "I ended the conversation in the middle. Let's talk again next time!"
@@ -238,8 +238,8 @@ def end_chat():
 
 @app.route('/complete-session', methods=['POST'])
 def complete_session():
-    user_info = session.get('user_info', {})
-    start_time = session.get('start_time')
+    # user_info = session.get('user_info', {})
+    # start_time = session.get('start_time')
 
     if not user_info or not start_time:
         return jsonify({"error": "세션 정보가 없습니다."}), 400
