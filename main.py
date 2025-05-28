@@ -190,7 +190,7 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
     # c = conn.cursor()
     # c.execute(
     #     'UPDATE users SET chat_history = ? WHERE name = ? AND start_time = ?',
-    #     (str(chat_history), session['user_info']['name'], session['start_time']))
+
     # conn.commit()
     # conn.close()
     conn = sqlite3.connect('chatbot.db')
@@ -203,6 +203,7 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
          start_time, str(chat_history), 'incomplete'))
     conn.commit()
     conn.close()
+
 
     # return jsonify({"reply": bot_reply})
     return jsonify({
