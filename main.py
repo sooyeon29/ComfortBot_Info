@@ -83,7 +83,7 @@ def chat():
     user_info = data.get("user_info", {})  # ← 새로 추가
     chat_history = data.get("chat_history", [])  # ← 새로 추가
 
-    chat_history = session.get('chat_history', [])
+    # chat_history = session.get('chat_history', [])
 
     # 사용자의 첫 메시지 저장
     chat_history.append({"user": user_input, "bot": None})
@@ -169,7 +169,7 @@ Remember: You are not a therapist or emotional supporter. You are a calm, clear,
 
     # 응답 저장 및 반환
     chat_history.append({"user": user_input, "bot": bot_reply})
-    session['chat_history'] = chat_history
+    # session['chat_history'] = chat_history
 
     # 실시간 저장
 
